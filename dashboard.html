@@ -3,15 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Dashboard</title>
+    <style>
+        .post{
+            border: 1px solid black;
+            padding: 20px;
+            margin-top: 10px;
+        }
+    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+
+    <div id="toast-msg" class="toast-notification"></div>
+
+    
     <nav>
         <button id="sigout-btn">sing out</button>
         <button id="delete-btn">Delete</button>
     </nav>
     <h2>Dashboard</h2>
 
+
+    <div>
+        <div>
+            <input type="text" placeholder="Enter text for post" id="post-inp">
+            <button id="post-btn">post</button>
+        </div>
+        <div class="post-main">
+
+        </div>
+    </div>
 
 
     <script type="module" src="dashboard.js"></script>
