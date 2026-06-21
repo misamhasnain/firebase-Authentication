@@ -10,7 +10,6 @@ let postInp = document.querySelector("#post-inp");
 let postBtn = document.querySelector("#post-btn");
 let postMain = document.querySelector(".post-main");
 
-// 1. Auth State Observer (Single source of truth)
 let getCurrentUser = () => {
     onAuthStateChanged(auth, (user) => {
         if (!user) {
@@ -21,7 +20,6 @@ let getCurrentUser = () => {
         userId = user.uid;
         console.log("current uid =>", userId);
 
-        // Sirf tab chalenge jab valid userId mil jaye
         getUser();
         userPost();
     });
@@ -47,35 +45,24 @@ let deleteUserAccount = async () => {
         const auth = getAuth();
         const user = auth.currentUser;
 
-        if (!user) {
-            console.log("No user is currently logged in.");
-            return;
-        }
+        if (!user) return;
 
-        
-        await deleteUserFromDb(user).then(() =>{
-            console.log("User data deleted from database successfully.");
+        showMessage("Deleting account...", "info");
 
-            deleteUserFromDb().then(() =>{
-                window.location.replace("./index.html")
-            })
-        });
+        await deleteUserFromDb();
+        console.log("User data deleted from DB");
 
-        // 2. Phir user ko authentication se delete karein
         await deleteUser(user);
-        console.log("Successfully account deleted from Auth.");
 
-        // 3. Last mein redirect karein
+        console.log("User deleted from Auth");
+
+        showMessage("Account deleted successfully", "success");
+
         window.location.replace("./index.html");
 
     } catch (error) {
-        console.error("Can't delete user account");
-        console.error(error);
-        
-        // Ek aam error jo Firebase deta hai: auth/requires-recent-login
-        if (error.code === 'auth/requires-recent-login') {
-            alert("Security Alert: Please log in again before deleting your account.");
-        }
+        console.error("Delete failed:", error);
+        showMessage("Failed to delete account", "error");
     }
 }
 
@@ -92,10 +79,12 @@ let getUser = async () => {
     }
 }
 
-// sign out
+
 let userSignOut = async () => {
     try {
         await signOut(auth);
+                showMessage("Signed out successfully", "info");
+
         console.log('success on sign out');
         requireGuest();
 
@@ -106,11 +95,10 @@ let userSignOut = async () => {
 
     } catch (error) {
         console.log('error on sign out => ', error);
-        howMessage("Sign out failed", "error");
+        showMessage("Sign out failed", "error");
     }
 }
 
-// Create Post
 let create = async () => {
     try {
         if (!userId || postInp.value.trim().length < 1){
@@ -129,7 +117,7 @@ let create = async () => {
         postInp.value = "";
                 showMessage("Post created successfully", "success");
 
-        await userPost(); // Nayi posts reload
+        await userPost(); 
 
     } catch (error) {
         console.log(error);
@@ -138,13 +126,12 @@ let create = async () => {
     }
 }
 
-// Fetch Specific User Posts
 let userPost = async () => {
     try {
-        // Guard clause: Agar userId abhi null hai toh query na chale
+
         if (!userId) return;
 
-        posts = []; // Purani posts clear
+        posts = [];
 
         const queryPost = query(
             collection(db, "posts"),
@@ -185,7 +172,6 @@ let renderPosts = () => {
     });
 }
 
-// Event Listeners
 deleteBtn.addEventListener("click", () => deleteUserAccount());
 sigoutBtn.addEventListener("click", () => userSignOut());
 postBtn.addEventListener("click", () => create());

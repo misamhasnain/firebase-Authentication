@@ -19,11 +19,7 @@ let loginUser = async () => {
     try {
         if (!validateForm()) return;
 
-        const userCredential = await signInWithEmailAndPassword(
-            auth,
-            EmailInpt.value,
-            PassInput.value
-        );
+        const userCredential = await signInWithEmailAndPassword(auth,EmailInpt.value,PassInput.value);
 
         const user = userCredential.user;
 
