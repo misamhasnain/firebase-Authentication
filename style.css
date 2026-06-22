@@ -1,453 +1,124 @@
-/* =========================================================
-   RESET & BASE
-   ========================================================= */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-:root {
-  --bg: #0f172a;
-  --bg-soft: #131c31;
-  --surface: #1a2540;
-  --surface-border: #2a3759;
-  --text: #f1f5f9;
-  --text-muted: #93a0bb;
-  --primary: #4f46e5;
-  --primary-hover: #6366f1;
-  --primary-soft: rgba(79, 70, 229, 0.15);
-  --danger: #ef4444;
-  --danger-hover: #f87171;
-  --danger-soft: rgba(239, 68, 68, 0.12);
-  --ring: rgba(99, 102, 241, 0.35);
-  --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 20px;
-  --shadow-card: 0 20px 50px -15px rgba(0, 0, 0, 0.5);
-  --transition: 180ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-html {
-  height: 100%;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
 }
 
 body {
-  min-height: 100%;
-  margin: 0;
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Helvetica, Arial, sans-serif;
-  font-size: 16px;
-  line-height: 1.5;
-  color: var(--text);
-  background:
-    radial-gradient(900px 500px at 12% -10%, rgba(79, 70, 229, 0.20), transparent 60%),
-    radial-gradient(700px 500px at 110% 10%, rgba(99, 102, 241, 0.12), transparent 55%),
-    var(--bg);
-  background-attachment: fixed;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
+    background-color: #f2f5f9;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px;
 }
 
-h1, h2, h3, p {
-  margin: 0;
-}
-
-a {
-  color: var(--primary-hover);
-  text-decoration: none;
-  transition: color var(--transition);
-}
-
-a:hover {
-  color: #a5b4fc;
-  text-decoration: underline;
-}
-
-button {
-  font-family: inherit;
-}
-
-/* Visible keyboard focus, everywhere */
-a:focus-visible,
-button:focus-visible,
-input:focus-visible {
-  outline: 2px solid var(--primary-hover);
-  outline-offset: 2px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-/* =========================================================
-   AUTH LAYOUT  (index.html / login.html)
-   body wraps a <form id="register-form|login-form"> and a <p>
-   ========================================================= */
-body:has(#register-form),
-body:has(#login-form) {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  padding: 24px;
-  gap: 20px;
-}
-
-#register-form,
-#login-form {
-  position: relative;
-  width: 100%;
-  max-width: 380px;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  padding: 38px 32px 32px;
-  background: var(--surface);
-  border: 1px solid var(--surface-border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
-  animation: card-in 420ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* signature: a soft gradient accent bar on every auth card */
-#register-form::before,
-#login-form::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 14%;
-  right: 14%;
-  height: 3px;
-  border-radius: 0 0 4px 4px;
-  background: linear-gradient(90deg, var(--primary), #a78bfa);
-}
-
-@keyframes card-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Forms */
+form {
+    background: white;
+    padding: 30px;
+    width: 350px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
 }
 
 h2 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  color: var(--text);
-  text-align: center;
+    margin-bottom: 20px;
 }
 
-/* login.html has an h2 outside the form, in the same flex column */
-body:has(#login-form) > h2 {
-  margin-bottom: -4px;
+form div {
+    margin-bottom: 15px;
 }
 
-#register-form > div,
-#login-form > div {
-  display: flex;
+input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    outline: none;
 }
 
-/* =========================================================
-   INPUTS
-   ========================================================= */
-input[type="text"],
-input[type="email"],
-input[type="password"] {
-  width: 100%;
-  padding: 12px 14px;
-  font-size: 0.95rem;
-  color: var(--text);
-  background: var(--bg-soft);
-  border: 1px solid var(--surface-border);
-  border-radius: var(--radius-sm);
-  transition: border-color var(--transition), box-shadow var(--transition),
-    background-color var(--transition);
+input:focus {
+    border-color: royalblue;
 }
 
-input[type="text"]::placeholder,
-input[type="password"]::placeholder {
-  color: var(--text-muted);
+button,
+input[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background: royalblue;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: .3s;
 }
 
-input[type="text"]:hover,
-input[type="password"]:hover {
-  border-color: #3a4a73;
+button:hover,
+input[type="submit"]:hover {
+    background: #244dcf;
 }
 
-input[type="text"]:focus,
-input[type="password"]:focus {
-  outline: none;
-  border-color: var(--primary-hover);
-  background: var(--surface);
-  box-shadow: 0 0 0 4px var(--ring);
+p {
+    margin-top: 20px;
 }
 
-/* =========================================================
-   BUTTONS
-   ========================================================= */
-#sudmit-btn,
-#submit-btn {
-  width: 100%;
-  padding: 12px 16px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  color: #fff;
-  background: var(--primary);
-  border: none;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: background-color var(--transition), transform var(--transition),
-    box-shadow var(--transition);
+a {
+    text-decoration: none;
+    color: royalblue;
 }
 
-#sudmit-btn:hover,
-#submit-btn:hover {
-  background: var(--primary-hover);
-  box-shadow: 0 8px 20px -6px rgba(99, 102, 241, 0.55);
-}
+/* Dashboard */
 
-#sudmit-btn:active,
-#submit-btn:active {
-  transform: translateY(1px) scale(0.99);
-}
-
-/* helper text under the register form */
-body:has(#register-form) > p {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  text-align: center;
-}
-
-/* =========================================================
-   DASHBOARD NAV  (dashboard.html)
-   ========================================================= */
 nav {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 12px;
-  padding: 16px 24px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--surface-border);
-  position: sticky;
-  top: 0;
-  z-index: 10;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-bottom: 30px;
 }
 
 nav button {
-  padding: 9px 18px;
-  font-size: 0.88rem;
-  font-weight: 600;
-  border-radius: var(--radius-sm);
-  border: 1px solid transparent;
-  cursor: pointer;
-  transition: background-color var(--transition), color var(--transition),
-    border-color var(--transition), transform var(--transition);
-}
-
-#sigout-btn {
-  color: var(--text);
-  background: transparent;
-  border-color: var(--surface-border);
-}
-
-#sigout-btn:hover {
-  background: var(--bg-soft);
-  border-color: #3a4a73;
-}
-
-#delete-btn {
-  color: var(--danger-hover);
-  background: var(--danger-soft);
-  border-color: rgba(239, 68, 68, 0.3);
-}
-
-#delete-btn:hover {
-  color: #fff;
-  background: var(--danger);
-  border-color: var(--danger);
-}
-
-nav button:active {
-  transform: translateY(1px) scale(0.98);
-}
-
-/* =========================================================
-   DASHBOARD CONTENT
-   ========================================================= */
-body:has(nav) {
-  margin: 0;
-  background:
-    radial-gradient(900px 500px at 12% -10%, rgba(79, 70, 229, 0.16), transparent 60%),
-    var(--bg);
-}
-
-body:has(nav) > h2 {
-  padding: 28px 24px 0;
-  font-size: 1.6rem;
-}
-
-body:has(nav) > div {
-  max-width: 640px;
-  margin: 0 auto;
-  padding: 20px 24px 48px;
-}
-
-/* the post-composer row: input + post button */
-body:has(nav) > div > div:first-child {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 8px;
+    width: 120px;
 }
 
 #post-inp {
-  flex: 1;
-  padding: 12px 14px;
-  font-size: 0.95rem;
-  color: var(--text);
-  background: var(--surface);
-  border: 1px solid var(--surface-border);
-  border-radius: var(--radius-sm);
-  transition: border-color var(--transition), box-shadow var(--transition);
-}
-
-#post-inp::placeholder {
-  color: var(--text-muted);
-}
-
-#post-inp:focus {
-  outline: none;
-  border-color: var(--primary-hover);
-  box-shadow: 0 0 0 4px var(--ring);
+    width: 400px;
 }
 
 #post-btn {
-  padding: 12px 20px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #fff;
-  background: var(--primary);
-  border: none;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background-color var(--transition), transform var(--transition);
+    width: 120px;
+    margin-top: 10px;
 }
 
-#post-btn:hover {
-  background: var(--primary-hover);
-}
-
-#post-btn:active {
-  transform: translateY(1px) scale(0.99);
-}
-
-/* =========================================================
-   POSTS
-   ========================================================= */
 .post-main {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 18px;
+    margin-top: 20px;
+    width: 500px;
 }
 
 .post {
-  border: 1px solid var(--surface-border) !important;
-  background: var(--surface);
-  padding: 16px 18px !important;
-  margin-top: 0 !important;
-  border-radius: var(--radius-md);
-  color: var(--text);
-  font-size: 0.95rem;
-  line-height: 1.55;
-  word-wrap: break-word;
-  animation: post-in 260ms ease-out;
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
 }
 
-@keyframes post-in {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+/* Toast */
 
-/* =========================================================
-   RESPONSIVE — TABLET
-   ========================================================= */
-@media (max-width: 768px) {
-  body:has(nav) > div {
-    padding: 16px 18px 40px;
-  }
-
-  body:has(nav) > h2 {
-    padding: 22px 18px 0;
-  }
-}
-
-/* =========================================================
-   RESPONSIVE — MOBILE
-   ========================================================= */
-@media (max-width: 480px) {
-  body:has(#register-form),
-  body:has(#login-form) {
-    padding: 16px;
-  }
-
-  #register-form,
-  #login-form {
-    max-width: 100%;
-    padding: 32px 22px 26px;
-    border-radius: var(--radius-md);
-  }
-
-  h2 {
-    font-size: 1.3rem;
-  }
-
-  nav {
-    justify-content: stretch;
-    padding: 12px 16px;
-  }
-
-  nav button {
-    flex: 1;
-    text-align: center;
-  }
-
-  body:has(nav) > div > div:first-child {
-    flex-direction: column;
-  }
-
-  #post-btn {
-    width: 100%;
-  }
+.toast-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: green;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    display: none;
 }
 
 
-
-/* =========================================================
-   UI MESSAGE (TOAST SYSTEM)
-   ========================================================= */
 
 #ui-message {
   position: fixed;

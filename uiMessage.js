@@ -1,15 +1,12 @@
 let messageBox = document.createElement("div");
-messageBox.id = "ui-message";
 document.body.appendChild(messageBox);
 
-export function showMessage(text, type = "success") {
-    messageBox.textContent = text;
-
-    messageBox.className = "";
-    messageBox.classList.add(type); 
-    messageBox.classList.add("show");
+export function showMessage(text, type) {
+    messageBox.innerText = text;
+    messageBox.className = type;
 
     setTimeout(() => {
-        messageBox.classList.remove("show");
+        messageBox.innerText = "";
+        messageBox.className = "";
     }, 3000);
 }
