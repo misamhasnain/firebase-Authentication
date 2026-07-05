@@ -1,10 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
 import { getAnalytics  } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-analytics.js";
-import { getAuth, createUserWithEmailAndPassword  , deleteUser , signOut } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
-
-import { query, where, onSnapshot, deleteDoc, doc, setDoc, getFirestore, addDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
-import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
-import{onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+import { getAuth,sendPasswordResetEmail, createUserWithEmailAndPassword, deleteUser, signOut, signInWithEmailAndPassword, onAuthStateChanged, GoogleAuthProvider, getRedirectResult, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+import { query,and,or, serverTimestamp, updateDoc, where, onSnapshot, deleteDoc, doc, setDoc, getFirestore, addDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCwMBiq3RBycBZNPukx0F19WZKrPpPDiHY",
@@ -21,6 +18,6 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const db = getFirestore(app);
 const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
 
-export { auth,signInWithEmailAndPassword,signOut,deleteUser,onAuthStateChanged, createUserWithEmailAndPassword, onSnapshot, doc, setDoc, db, addDoc,getAuth, collection, getDocs, deleteDoc, where, query };
-
+export { auth,and,or,sendPasswordResetEmail, provider, signInWithPopup, getRedirectResult, GoogleAuthProvider, signInWithEmailAndPassword, updateDoc, serverTimestamp, signOut, deleteUser, onAuthStateChanged, createUserWithEmailAndPassword, onSnapshot, doc, setDoc, db, addDoc, getAuth, collection, getDocs, deleteDoc, where, query };

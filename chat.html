@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+            padding:20px;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+
+        .main{
+            display:flex;
+            height:80vh;
+            border:1px solid #ccc;
+        }
+
+        /* Users */
+        .users{
+            width:30%;
+            border-right:1px solid #ddd;
+            overflow-y:auto;
+            padding:10px;
+        }
+
+        .user-card{
+            border:1px solid #ddd;
+            padding:10px;
+            margin-bottom:10px;
+            cursor:pointer;
+            border-radius:5px;
+        }
+
+        .user-card:hover{
+            background:#f3f3f3;
+        }
+
+        /* Chat */
+        .chat{
+            width:70%;
+            display:flex;
+            flex-direction:column;
+        }
+
+        .msg-section{
+            flex:1;
+            padding:15px;
+            overflow-y:auto;
+            background:#f8f9fa;
+        }
+
+        .msg{
+            margin:10px 0;
+            display:flex;
+        }
+
+        .left{
+            justify-content:flex-start;
+        }
+
+        .right{
+            justify-content:flex-end;
+        }
+
+        .msg span{
+            background:#0d6efd;
+            color:white;
+            padding:10px 15px;
+            border-radius:20px;
+            max-width:70%;
+            word-wrap:break-word;
+        }
+
+        .left span{
+            background:#6c757d;
+        }
+
+        .send-box{
+            display:flex;
+            gap:10px;
+            padding:10px;
+            border-top:1px solid #ddd;
+        }
+
+        #msg-text{
+            flex:1;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary mb-3">
+    <div class="container-fluid">
+        <a class="navbar-brand">Profile</a>
+
+        <div class="navbar-nav">
+            <a class="nav-link active" href="./chat.html">Chat</a>
+            <a class="nav-link" href="./dashboard.html">Dashboard</a>
+        </div>
+    </div>
+</nav>
+
+
+
+   <div class="main">
+        <div class="users">
+
+        </div>
+        <div class="chat">
+            <div class="msg-section"></div>
+            <div class="msg-send">
+                <input type="text" id="msg-text" placeholder="type a message">
+                <button id="msg-send-btn">send</button>
+            </div>
+        </div>
+    </div>
+
+<script type="module" src="chat.js"></script>
+
+</body>
+</html>

@@ -1,6 +1,6 @@
 import { showMessage } from "./uiMessage.js";
 import { requireGuest } from "./auth-guard.js";
-import { addDoc, auth, collection, db, deleteDoc, doc, getAuth, getDocs, onAuthStateChanged, query, where, signOut, deleteUser } from "./firebaseConfig.js";
+import { addDoc, auth, updateDoc, collection, db, deleteDoc, doc, getAuth, getDocs, onAuthStateChanged, query, where, signOut, deleteUser, serverTimestamp } from "./firebaseConfig.js";
 let sigoutBtn = document.querySelector("#sigout-btn");
 let deleteBtn = document.querySelector("#delete-btn");
 let userId = null;
@@ -9,6 +9,7 @@ let posts = [];
 let postInp = document.querySelector("#post-inp");
 let postBtn = document.querySelector("#post-btn");
 let postMain = document.querySelector(".post-main");
+
 
 let getCurrentUser = () => {
     onAuthStateChanged(auth, (user) => {
@@ -49,20 +50,25 @@ let deleteUserAccount = async () => {
 
         showMessage("Deleting account...", "info");
 
+        // Pehle DB se data delete karein
         await deleteUserFromDb();
         console.log("User data deleted from DB");
 
+        // Auth se user delete karein
         await deleteUser(user);
-
         console.log("User deleted from Auth");
 
         showMessage("Account deleted successfully", "success");
-
         window.location.replace("./index.html");
 
     } catch (error) {
         console.error("Delete failed:", error);
-        showMessage("Failed to delete account", "error");
+
+        if (error.code === "auth/requires-recent-login") {
+            window.location.replace("./login.html");
+        } else {
+            showMessage("Failed to delete account", "error");
+        }
     }
 }
 
@@ -83,13 +89,13 @@ let getUser = async () => {
 let userSignOut = async () => {
     try {
         await signOut(auth);
-                showMessage("Signed out successfully", "info");
+        showMessage("Signed out successfully", "info");
 
         console.log('success on sign out');
         requireGuest();
 
 
-         setTimeout(() => {
+        setTimeout(() => {
             window.location.replace("./index.html");
         }, 1000);
 
@@ -101,11 +107,11 @@ let userSignOut = async () => {
 
 let create = async () => {
     try {
-        if (!userId || postInp.value.trim().length < 1){
-                        showMessage("Write something first", "error");
-                        return;
-                    } 
-                        
+        if (!userId || postInp.value.trim().length < 1) {
+            showMessage("Write something first", "error");
+            return;
+        }
+
         let newDate = new Date();
 
         await addDoc(collection(db, "posts"), {
@@ -115,17 +121,18 @@ let create = async () => {
         });
 
         postInp.value = "";
-                showMessage("Post created successfully", "success");
+        showMessage("Post created successfully", "success");
 
-        await userPost(); 
+        await userPost();
 
     } catch (error) {
         console.log(error);
-                showMessage("Failed to create post", "error");
+        showMessage("Failed to create post", "error");
 
     }
 }
 
+//user post
 let userPost = async () => {
     try {
 
@@ -154,6 +161,129 @@ let userPost = async () => {
     }
 }
 
+
+
+
+
+// deleted posts
+let deletePost = async (id) => {
+    try {
+        console.log("deleted post id =>", id);
+
+        if (!id) {
+            console.log("deleted post id not found!");
+            return;
+        }
+
+        await deleteDoc(doc(db, "posts", id));
+
+        console.log("post deleted successfully!");
+
+        posts = posts.filter((post) => post.id !== id);
+
+        renderPosts();
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+// edit post
+
+
+let editPost = (id) => {
+    try {
+        console.log("edit post id ==> ", id);
+
+        let editPostInp = document.getElementById(id);
+        let btnBox = document.getElementById(`btnBox-${id}`);
+
+        if (!editPostInp) {
+            console.log("input not found");
+            return;
+        }
+
+        editPostInp.disabled = false;
+
+        if (btnBox) {
+            btnBox.style.display = "none";
+        }
+
+        let updateBtn =
+            editPostInp.parentElement
+                .querySelector(".updateBtn");
+
+        if (updateBtn) {
+            updateBtn.style.display = "inline-block";
+        }
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+//update btn
+
+let update = async (id) => {
+    try {
+        let postInp = document.getElementById(`${id}`);
+        console.log(postInp.value);
+
+        let Timestamp = serverTimestamp();
+
+        // await addData();
+        await updateDoc(doc(db, "posts", id), {
+            text: postInp.value,
+            Timestamp: serverTimestamp()
+        }).then(() => {
+            console.log("post update! ==>", id);
+            postInp.setAttribute("disabled", true)
+            let updateBtn =
+                postInp.parentElement
+                    .querySelector(".updateBtn");
+
+            updateBtn.style.display = "none";
+            document.getElementById(`btnBox-${id}`).style.display = "block"
+
+            let dataupdata = posts.find((e) => e.id === id);
+
+            dataupdata = {
+                ...dataupdata,
+                text: postInp.value,
+                Timestamp: serverTimestamp()
+            }
+
+            console.log("before ====>");
+
+            console.log(posts);
+
+
+            let copy = posts.filter((post) => post.id !== id);
+            posts = [
+                ...copy,
+                dataupdata
+            ]
+
+            console.log("after update  ==>");
+            console.log(posts);
+
+            renderPosts();
+
+        })
+
+
+    } catch (error) {
+        console.log(error);
+
+    }
+}
+
+
+
+
+
 // Render posts
 let renderPosts = () => {
     postMain.innerHTML = "";
@@ -163,14 +293,42 @@ let renderPosts = () => {
         return;
     }
 
-    posts.forEach((post) => {
-        postMain.innerHTML += `
-            <div class="post">
-                ${post.text}
-            </div>
-        `;
-    });
+  
+
+    posts.map((post) => {
+        let postDiv = document.createElement("div");
+        postDiv.className = "post";
+        postDiv.innerHTML = `
+        <div>
+        <input id = "${post?.id}" type = "text" value =${post?.text} disabled/>
+<button class="updateBtn" style="display: none;">Update</button>
+
+        </div>
+        
+        <div id = "btnBox-${post?.id}">
+            <button class = "DelBtn">Delete </button>
+            <button class = "editBtn"> Edit </button>
+        </div>
+        `
+
+        postDiv.querySelector(".DelBtn").addEventListener("click", () => deletePost(post?.id));
+        postDiv.querySelector(".editBtn").addEventListener("click", () => editPost(post?.id));
+
+        postDiv.querySelector(".updateBtn")
+            .addEventListener("click", () =>
+                update(post.id));
+
+
+        postMain.appendChild(postDiv)
+    })
+
+
+
+
 }
+
+
+
 
 deleteBtn.addEventListener("click", () => deleteUserAccount());
 sigoutBtn.addEventListener("click", () => userSignOut());

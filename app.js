@@ -1,85 +1,74 @@
-import { addDoc,getAuth, auth, collection, createUserWithEmailAndPassword, db } from "./firebaseConfig.js";
+import { addDoc, getAuth, auth, collection, createUserWithEmailAndPassword, db, signInWithPopup, GoogleAuthProvider } from "./firebaseConfig.js";
 
 let register = document.querySelector("#register-form");
 let EmailInpt = document.querySelector("#Email-input");
 let PassInput = document.querySelector("#password-input");
-let submitBtn = document.querySelector("#sudmit-btn");
-
+let googleBtn = document.querySelector("#google-btn"); 
 
 let validataFrom = ()=>{
     if (EmailInpt.value.length < 3 || PassInput.value.length < 4) {
-        console.error(new Error("All fields must be filled!"))
+        console.error(new Error("All fields must be filled!"));
         alert("Password must be at least 4 characters");
-
-        return false
+        return false;
     }
     return true;
 }
 
-
 let addUserInDB = async (user)=>{
     try {
         console.log("user for add func =>" , user);
-
-        // add doc in users collection
         let userdata = {
             uid : user?.uid,
-            displayName : user?.displayName,
-            email : user?.emil,
-            phoneNumber : user?.phoneNumber
+            displayName : user?.displayName || "Anonymous",
+            email : user?.email, 
+            phoneNumber : user?.phoneNumber || null
         }
 
-        await addDoc(collection(db, 'users'), userdata)
-        .then(() => {
-            console.log("user stored in db");
-            // add uid to localstorage
-            window.localStorage.setItem('uid', JSON.stringify(userdata.uid))
-
-        })
-        
+        await addDoc(collection(db, 'users'), userdata);
+        console.log("user stored in db");
+        window.localStorage.setItem('uid', JSON.stringify(userdata.uid));
     } catch (error) {
-        console.error(new Error('error in adding user to db!'))
+        console.error('error in adding user to db!', error);
+    }
+}
+
+let creatUser = async ()=>{
+    try {
+        if(!validataFrom()) return;
+        const authInstance = getAuth();
+        const userCredential = await createUserWithEmailAndPassword(authInstance, EmailInpt.value, PassInput.value);
+        const user = userCredential.user;
+        console.log("success!", user);
+        await addUserInDB(user);
+        window.location.replace("./dashboard.html");
+    } catch (error) {
         console.error(error);
         
     }
 }
 
-
-
-
-let creatUser = async ()=>{
+let signWithGoogle = async ()=>{
+    const provider = new GoogleAuthProvider();
     try {
-        if(!validataFrom()){
-            console.error(new Error("user account can not be created!"))
-            return
-        }
-
-        const auth = getAuth();
-       await createUserWithEmailAndPassword(auth, EmailInpt.value, PassInput.value)
-  .then((userCredential) => {
-    // Signed up 
-    const user = userCredential.user;
-    console.log("success!");
-    console.log("userCredential =>", user)
-    
-    addUserInDB(user).then(()=>window.location.replace("./dashboard.html"));
-    
-    // ...
-  })
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+        console.log("Success! Google user signed in:", user);
+        await addUserInDB(user);
+        window.location.replace("./dashboard.html");
     } catch (error) {
-
-
-    console.error(error);
-    
+        console.error("Google Sign-In Error:", error);
+        
     }
-}
-
-
+};
 
 register.addEventListener("submit" , (e)=>{
     e.preventDefault();
-    if (validataFrom()) {
-        creatUser();
-    }
-    
-})
+    creatUser();
+});
+
+if (googleBtn) {
+    googleBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        signWithGoogle();
+    });
+}
